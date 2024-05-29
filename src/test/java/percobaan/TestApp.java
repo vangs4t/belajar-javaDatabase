@@ -1,5 +1,8 @@
 package percobaan;
 
+import Utility.ConnectionUtil;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,5 +42,31 @@ public class TestApp {
         } catch (SQLException e){
             fail(e);
         }
+    }
+
+    @Test
+    void conncetionPollTest() {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
+        config.setJdbcUrl("jdbc:mariadb://localhost:3306/uniku");
+        config.setUsername("root");
+        config.setPassword("1234");
+
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(5);
+        config.setIdleTimeout(60_000);
+        config.setMaxLifetime(10 * 60_000);
+
+        try {
+            HikariDataSource source = new HikariDataSource(config);
+            Connection connection = source.getConnection();
+        } catch (SQLException e){
+            fail(e);
+        }
+    }
+
+    @Test
+    void testUtil() throws SQLException{
+        Connection util = ConnectionUtil.getDataSource().getConnection();
     }
 }
