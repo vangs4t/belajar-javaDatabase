@@ -8,21 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ReturnTest {
-
+public class SqlInjectionTest {
     @Test
-    void ResultTest() throws SQLException {
+    void SqlIjectrionTest() throws SQLException {
         Connection connection = ConnectionUtil.getDataSource().getConnection();
         Statement statement =  connection.createStatement();
-        String update = """
-                SELECT * FROM mahasiswa
-                """;
+        String username = "admin";
+        String password = "admin";
+        String update = "SELECT * FROM staff WHERE username = '"+username+"' AND password = '"+password+"'";
         ResultSet set = statement.executeQuery(update);
-        while (set.next()){
-            String nama = set.getString("nama");
-            int nim = set.getInt("nim");
-            String email = set.getString("email");
-            System.out.println(String.join(", ", nama,String.valueOf(nim),email));
+        if (set.next()){
+            System.out.println("Sukses Login");
+        } else {
+            System.out.println("Gagal Login");
         }
         set.close();
         statement.close();
